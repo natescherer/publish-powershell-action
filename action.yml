@@ -59,7 +59,7 @@ runs:
             "</package>"
           )
 
-          Publish-PSResource -Path $PublishPath -Respository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecString
+          Publish-PSResource -Path $PublishPath -Repository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecString
 
           #Publish-Module -Path $PublishPath -Repository "GitHubPackages" -Credential $Cred -NuGetApiKey "${{ inputs.github-token }}"
         } elseif ("${{ inputs.publish-type }}" -eq "script") {
