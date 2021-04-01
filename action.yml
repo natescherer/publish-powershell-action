@@ -12,14 +12,16 @@ inputs:
     required: true
   path:
     description: |
-      Path to publish. For a module, should be a directory containing the 
-      .psm1 file in the root. For a script, should be the path to the .ps1 
-      file.
+      Path to publish relative to the root of the project. For a module, 
+      should be a directory containing the .psm1 file in the root. For a script, 
+      should be the path to the .ps1 file.
 runs:
   using: "composite"
   steps:
     - name: Publish
       run: |
+        $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
+
         $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
         $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList ${{ github.repository_owner }}, (ConvertTo-SecureString -AsPlainText ${{ inputs.github-token }} -Force)
@@ -27,12 +29,12 @@ runs:
         Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
 
         if ("${{ inputs.publish-type }}" -eq "module") {
-          $Manifest = Get-ChildItem -Path "${{ inputs.path }}"" -Include "*.psd1"
+          $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1"
           $ManifestData = Test-ModuleManifest
 
           $PublishPath = "${{ github.action_path }}\$($ManifestData.Name)"
           New-Item -Path $PublishPath -Type Directory | Out-Null
-          Copy-Item -Path "${{ inputs.path }}\*" -Destination $PublishPath -Recurse
+          Copy-Item -Path "$FullPath\*" -Destination $PublishPath -Recurse
 
           Publish-Module -Path $PublishPath Repository "GitHubPackages" -Credential $Cred
         } elseif ("${{ inputs.publish-type }}" -eq "script") {
