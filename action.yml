@@ -54,7 +54,7 @@ runs:
             "<tags>$($ManifestData.PrivateData.PSData.Tags)</tags>`r`n" +
             "<dependencies>`r`n" +
             "</dependencies>`r`n" +
-            "<repository type=`"git`" url=`"https://github.com/${{ github.repository }}`" />`r`n" +
+            "<repository type=`"git`" url=`"https://github.com/${{ github.repository }}`" commit=`"${{ github.sha }}`" />`r`n" +
             "</metadata>`r`n" +
             "</package>"
           )
