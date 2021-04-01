@@ -3,8 +3,7 @@ description: Publish a PowerShell module or script to GitHub Packages.
 inputs:
   github-token:
     description: |
-      Token to authenticate to GitHub. Set to  
-      \${{ secrets.GITHUB_TOKEN }}.
+      Token to authenticate to GitHub.
     required: true
   publish-type:
     description: |
