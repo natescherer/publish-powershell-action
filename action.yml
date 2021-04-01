@@ -36,7 +36,7 @@ runs:
           New-Item -Path $PublishPath -Type Directory | Out-Null
           Copy-Item -Path "$FullPath\*" -Destination $PublishPath -Recurse
 
-          Publish-Module -Path $PublishPath -Repository "GitHubPackages" -Credential $Cred -NuGetApiKey "n/a"
+          Publish-Module -Path $PublishPath -Repository "GitHubPackages" -Credential $Cred -NuGetApiKey "${{ inputs.github-token }}"
         } elseif ("${{ inputs.publish-type }}" -eq "script") {
           # Implement this
         } else {
