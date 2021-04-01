@@ -58,7 +58,7 @@ runs:
             "</metadata>`r`n" +
             "</package>"
           )
-          $NuspecPath = "$PublishPath\$($ManifestData.Name)\$($ManifestData.Name).nuspec"
+          $NuspecPath = "$PublishPath\$($ManifestData.Name).nuspec"
           Out-File -FilePath $NuspecPath -InputObject $NuspecData
 
           Publish-PSResource -Path $PublishPath -Repository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecPath
