@@ -29,7 +29,7 @@ runs:
 
         nuget sources Add -Name "GitHubPackages" -Source $NuGetUri -UserName "${{ github.repository_owner }}" -Password "${{ inputs.github-token }}"
         #Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
-        Register-PSResourceRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
+        Register-PSResourceRepository -Name "GitHubPackages" -URL $NuGetUri
 
         if ("${{ inputs.publish-type }}" -eq "module") {
           $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1" -Recurse
