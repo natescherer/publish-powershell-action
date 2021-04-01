@@ -35,6 +35,9 @@ runs:
           $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1" -Recurse
           $ManifestData = Test-ModuleManifest -Path $Manifest.FullName
 
+          $FullVersion = $ManifestData.ModuleVersion
+          if ($ManifestData.PrivateData.PSData.Prerelease) { $FullVersion += "-" + $ManifestData.PrivateData.PSData.Prerelease }
+
           $PublishPath = "${{ github.action_path }}\$($ManifestData.Name)"
           New-Item -Path $PublishPath -Type Directory | Out-Null
           Copy-Item -Path "$FullPath\*" -Destination $PublishPath -Recurse
