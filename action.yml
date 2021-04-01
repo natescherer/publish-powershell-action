@@ -28,6 +28,7 @@ runs:
         Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
 
         if ("${{ inputs.publish-type }}" -eq "module") {
+          Get-ChildItem -Path $FullPath
           $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1"
           $ManifestData = Test-ModuleManifest -Path $Manifest
 
