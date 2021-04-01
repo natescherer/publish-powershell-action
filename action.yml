@@ -39,25 +39,25 @@ runs:
           New-Item -Path $PublishPath -Type Directory | Out-Null
           Copy-Item -Path "$FullPath\*" -Destination $PublishPath -Recurse
 
-          $NuspecString = @"
-            <?xml version="1.0"?>
-            <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
-            <metadata>
-            <id>$($ManifestData.Name)</id>
-            <version>$FullVersion</version>
-            <authors>$($ManifestData.Author)</authors>
-            <owners>$($ManifestData.Author)</owners>
-            <requireLicenseAcceptance>false</requireLicenseAcceptance>
-            <description>$($ManifestData.Description)</description>
-            <releaseNotes>$($ManifestData.PrivateData.PSData.ReleaseNotes)</releaseNotes>
-            <copyright>$($ManifestData.Copyright)</copyright>
-            <tags>$($ManifestData.PrivateData.PSData.Tags)</tags>
-            <dependencies>
-            </dependencies>
-            <repository type="git" url="https://github.com/${{ github.repository }}" />
-            </metadata>
-            </package>
-          "@
+          $NuspecString = (
+            "<?xml version="1.0"?>`r`n" +
+            "<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">`r`n" +
+            "<metadata>`r`n" +
+            "<id>$($ManifestData.Name)</id>`r`n" +
+            "<version>$FullVersion</version>`r`n" +
+            "<authors>$($ManifestData.Author)</authors>`r`n" +
+            "<owners>$($ManifestData.Author)</owners>`r`n" +
+            "<requireLicenseAcceptance>false</requireLicenseAcceptance>`r`n" +
+            "<description>$($ManifestData.Description)</description>`r`n" +
+            "<releaseNotes>$($ManifestData.PrivateData.PSData.ReleaseNotes)</releaseNotes>`r`n" +
+            "<copyright>$($ManifestData.Copyright)</copyright>`r`n" +
+            "<tags>$($ManifestData.PrivateData.PSData.Tags)</tags>`r`n" +
+            "<dependencies>`r`n" +
+            "</dependencies>`r`n" +
+            "<repository type="git" url="https://github.com/${{ github.repository }}" />`r`n" +
+            "</metadata>`r`n" +
+            "</package>"
+          )
 
           Publish-PSResource -Path $PublishPath -Respository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecString
 
