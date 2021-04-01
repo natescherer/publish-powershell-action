@@ -23,8 +23,9 @@ runs:
 
         $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
-        $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList ${{ github.repository_owner }}, (ConvertTo-SecureString -AsPlainText ${{ inputs.github-token }} -Force)
+        $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList "${{ github.repository_owner }}", (ConvertTo-SecureString -AsPlainText "${{ inputs.github-token }}" -Force)
 
+        nuget sources Add -Name "GitHubPackages" -Source $NuGetUri -UserName "${{ github.repository_owner }}" -Password "${{ inputs.github-token }}"
         Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
 
         if ("${{ inputs.publish-type }}" -eq "module") {
