@@ -41,7 +41,7 @@ runs:
 
           $NuspecString = (
             "<?xml version=`"1.0`"?>`r`n" +
-            "<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">`r`n" +
+            "<package xmlns=`"http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd`">`r`n" +
             "<metadata>`r`n" +
             "<id>$($ManifestData.Name)</id>`r`n" +
             "<version>$FullVersion</version>`r`n" +
