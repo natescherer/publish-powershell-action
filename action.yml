@@ -29,7 +29,7 @@ runs:
 
         if ("${{ inputs.publish-type }}" -eq "module") {
           $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1"
-          $ManifestData = Test-ModuleManifest
+          $ManifestData = Test-ModuleManifest -Path $Manifest
 
           $PublishPath = "${{ github.action_path }}\$($ManifestData.Name)"
           New-Item -Path $PublishPath -Type Directory | Out-Null
