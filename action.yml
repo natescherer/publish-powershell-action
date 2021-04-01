@@ -25,9 +25,9 @@ runs:
 
         $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
 
-        $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList "${{ github.repository_owner }}", (ConvertTo-SecureString -AsPlainText "${{ inputs.github-token }}" -Force)
+        #$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList "${{ github.repository_owner }}", (ConvertTo-SecureString -AsPlainText "${{ inputs.github-token }}" -Force)
 
-        nuget sources Add -Name "GitHubPackages" -Source $NuGetUri -UserName "${{ github.repository_owner }}" -Password "${{ inputs.github-token }}"
+        #nuget sources Add -Name "GitHubPackages" -Source $NuGetUri -UserName "${{ github.repository_owner }}" -Password "${{ inputs.github-token }}"
         #Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
         Register-PSResourceRepository -Name "GitHubPackages" -URL $NuGetUri
 
@@ -64,6 +64,7 @@ runs:
           $NuspecPath = "$PublishPath\$($ManifestData.Name).nuspec"
           Out-File -FilePath $NuspecPath -InputObject $NuspecData
 
+          Write-Host $NuspecData
           Publish-PSResource -Path $PublishPath -Repository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecPath
 
           #Publish-Module -Path $PublishPath -Repository "GitHubPackages" -Credential $Cred -NuGetApiKey "${{ inputs.github-token }}"
