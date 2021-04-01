@@ -1,0 +1,43 @@
+name: Publish PowerShell to GitHub Packages
+description: Publish a PowerShell module or script to GitHub Packages.
+inputs:
+  github-token:
+    description: |
+      Token to authenticate to GitHub. Set to  
+      \${{ secrets.GITHUB_TOKEN }}.
+    required: true
+  publish-type:
+    description: |
+      Set to "module" to publish a module or "script" to publish a script.
+    required: true
+  path:
+    description: |
+      Path to publish. For a module, should be a directory containing the 
+      .psm1 file in the root. For a script, should be the path to the .ps1 
+      file.
+runs:
+  using: "composite"
+  steps:
+    - name: Publish
+      run: |
+        $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+
+        $Cred = New-Object System.Management.Automation.PSCredential -ArgumentList ${{ github.repository_owner }}, (ConvertTo-SecureString -AsPlainText ${{ inputs.github-token }} -Force)
+
+        Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
+
+        if ("${{ inputs.publish-type }}" -eq "module") {
+          $Manifest = Get-ChildItem -Path "${{ inputs.path }}"" -Include "*.psd1"
+          $ManifestData = Test-ModuleManifest
+
+          $PublishPath = "${{ github.action_path }}\$($ManifestData.Name)"
+          New-Item -Path $PublishPath -Type Directory | Out-Null
+          Copy-Item -Path "${{ inputs.path }}\*" -Destination $PublishPath -Recurse
+
+          Publish-Module -Path $PublishPath Repository "GitHubPackages" -Credential $Cred
+        } elseif ("${{ inputs.publish-type }}" -eq "script") {
+          # Implement this
+        } else {
+          throw "'publish-type' did not match any expected values."
+        }
+      shell: pwsh
