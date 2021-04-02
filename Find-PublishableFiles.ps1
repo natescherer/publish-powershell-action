@@ -22,7 +22,7 @@ function Find-PublishableFiles {
         $OutputPath = $ModuleFile.Fullname
     }
 
-    if (!$PathResolved) {
+    if (!$OutputPath) {
         Write-Host "Searching for .ps1 files..."
         $ScriptFile = Get-ChildItem -Path "$Path\*" -Include "*.ps1"
         if (!$ScriptFile) {
