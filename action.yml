@@ -20,7 +20,7 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Publish to Packages
+    - name: Publish to GitHub Packages
       run: |
         Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
@@ -40,3 +40,4 @@ runs:
 
         gpr push -k ${{ inputs.github-token }} $NupkgPath -r $NuGetUri
       shell: pwsh
+      if: ${{ inputs.target == 'packages' }}
