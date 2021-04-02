@@ -18,9 +18,16 @@ inputs:
       be a .psm1 file, a .ps1 file, or a directory. If a directory, the action 
       will search for a .psd1 file in the root. If none are found, it will then 
       search for a .ps1 file in the root.
+    required: true
 runs:
   using: "composite"
   steps:
+    - name: Validate Inputs
+      run: |
+        $ValidTargets = @("packages","testgallery","gallery")
+        if ($ValidTargets -notcotains "${{ inputs.target }}") {
+          throw "Invalid value provided for 'target' input."
+        }
     - name: Publish to GitHub Packages
       run: |
         if ("${{ inputs.target }}" -eq "packages") {
@@ -40,18 +47,23 @@ runs:
             Write-Host "Input 'path' is a file."
           }
 
-          $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
-
+          
+          Write-Host "Registering local NuGet repository..."
           $LocalRepoPath = "${{ github.workspace }}\repo"
-
           Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
 
+          Write-Host "Publishing to local NuGet repostiory..."
           Publish-PSResource -Path $FullPath -Repository "LocalRepo"
 
-          $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
-
+          Write-Host "Install gpr tool..."
           dotnet tool install --global gpr
 
+          Write-Host "Publishing to GitHub Packages..."
+          $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
+          $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
           gpr push -k ${{ inputs.token }} $NupkgPath -r $NuGetUri
+
+          Write-Host "Done!"
+          "ACTION_COMPLETED=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
         }
       shell: pwsh
