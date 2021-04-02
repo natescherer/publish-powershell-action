@@ -25,7 +25,7 @@ runs:
     - name: Validate Inputs
       run: |
         $ValidTargets = @("packages","testgallery","gallery")
-        if ($ValidTargets -notcotains "${{ inputs.target }}") {
+        if ($ValidTargets -notcontains "${{ inputs.target }}") {
           throw "Invalid value provided for 'target' input."
         }
       shell: pwsh
