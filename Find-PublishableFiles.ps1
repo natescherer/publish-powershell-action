@@ -1,4 +1,4 @@
-function Find-PublishableFiles.ps1 {
+function Find-PublishableFiles {
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)]
