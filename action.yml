@@ -69,7 +69,7 @@ runs:
 
           Write-Host "Publishing to GitHub Packages..."
           $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
-          gpr push -k ${{ inputs.token }} $NupkgPath -r "https://github.com/${{ github.repository_owner }}"
+          gpr push -k ${{ inputs.token }} $NupkgPath -r "https://github.com/${{ github.repository }}"
 
           Write-Host "Done!"
         }
