@@ -17,60 +17,23 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Publish
+    - name: Publish to Packages
       run: |
         Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
         $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
 
-        $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json"
+        $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
 
-        #$Cred = New-Object System.Management.Automation.PSCredential -ArgumentList "${{ github.repository_owner }}", (ConvertTo-SecureString -AsPlainText "${{ inputs.github-token }}" -Force)
+        $LocalRepoPath = "${{ github.workspace }}\repo"
 
-        #nuget sources Add -Name "GitHubPackages" -Source $NuGetUri -UserName "${{ github.repository_owner }}" -Password "${{ inputs.github-token }}"
-        #Register-PSRepository -Name "GitHubPackages" -SourceLocation $NuGetUri -ScriptSourceLocation $NuGetUri -PublishLocation $NuGetUri -ScriptPublishLocation $NuGetUri -Credential $Cred
-        Register-PSResourceRepository -Name "GitHubPackages" -URL $NuGetUri
+        Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
 
-        if ("${{ inputs.publish-type }}" -eq "module") {
-          $Manifest = Get-ChildItem -Path $FullPath -Include "*.psd1" -Recurse
-          $ManifestData = Test-ModuleManifest -Path $Manifest.FullName
+        Publish-PSResource -Path $FullPath -Repository "LocalRepo"
 
-          $FullVersion = $ManifestData.ModuleVersion
-          if ($ManifestData.PrivateData.PSData.Prerelease) { $FullVersion += "-" + $ManifestData.PrivateData.PSData.Prerelease }
+        $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
 
-          $PublishPath = "${{ github.action_path }}\$($ManifestData.Name)"
-          New-Item -Path $PublishPath -Type Directory | Out-Null
-          Copy-Item -Path "$FullPath\*" -Destination $PublishPath -Recurse
+        dotnet tool install --global gpr
 
-          $NuspecData = (
-            "<?xml version=`"1.0`"?>`r`n" +
-            "<package xmlns=`"http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd`">`r`n" +
-            "<metadata>`r`n" +
-            "<id>$($ManifestData.Name)</id>`r`n" +
-            "<version>$FullVersion</version>`r`n" +
-            "<authors>$($ManifestData.Author)</authors>`r`n" +
-            "<owners>$($ManifestData.Author)</owners>`r`n" +
-            "<requireLicenseAcceptance>false</requireLicenseAcceptance>`r`n" +
-            "<description>$($ManifestData.Description)</description>`r`n" +
-            "<releaseNotes>$($ManifestData.PrivateData.PSData.ReleaseNotes)</releaseNotes>`r`n" +
-            "<copyright>$($ManifestData.Copyright)</copyright>`r`n" +
-            "<tags>$($ManifestData.PrivateData.PSData.Tags)</tags>`r`n" +
-            "<dependencies>`r`n" +
-            "</dependencies>`r`n" +
-            "<repository type=`"git`" url=`"https://github.com/${{ github.repository }}`" commit=`"${{ github.sha }}`" />`r`n" +
-            "</metadata>`r`n" +
-            "</package>"
-          )
-          $NuspecPath = "$PublishPath\$($ManifestData.Name).nuspec"
-          Out-File -FilePath $NuspecPath -InputObject $NuspecData
-
-          Write-Host $NuspecData
-          Publish-PSResource -Path $PublishPath -Repository "GitHubPackages" -APIKey "${{ inputs.github-token }}" -Nuspec $NuspecPath
-
-          #Publish-Module -Path $PublishPath -Repository "GitHubPackages" -Credential $Cred -NuGetApiKey "${{ inputs.github-token }}"
-        } elseif ("${{ inputs.publish-type }}" -eq "script") {
-          # Implement this
-        } else {
-          throw "'publish-type' did not match any expected values."
-        }
+        gpr push -k ${{ inputs.github-token }} $NupkgPath -r $NuGetUri
       shell: pwsh
