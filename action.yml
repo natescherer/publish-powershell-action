@@ -22,35 +22,36 @@ runs:
   using: "composite"
   steps:
     - name: Publish to GitHub Packages
-      if: ${{ inputs.target == 'packages' }}
       run: |
-        Write-Host "Starting Action..."
+        if ("${{ inputs.target }}" -eq "packages") {
+          Write-Host "Starting Action..."
 
-        Write-Host "Installing PowerShellGet 3..."
-        Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
+          Write-Host "Installing PowerShellGet 3..."
+          Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
-        $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
+          $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
 
-        if (Test-Path -Path $FullPath -PathType Container) {
-          Write-Host "Input 'path' is a directory."
+          if (Test-Path -Path $FullPath -PathType Container) {
+            Write-Host "Input 'path' is a directory."
 
-          . .\FindPublishableFiles.ps1
-          $FullPath = Find-PublishableFiles -Path $FullPath
-        } else {
-          Write-Host "Input 'path' is a file."
+            . .\FindPublishableFiles.ps1
+            $FullPath = Find-PublishableFiles -Path $FullPath
+          } else {
+            Write-Host "Input 'path' is a file."
+          }
+
+          $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
+
+          $LocalRepoPath = "${{ github.workspace }}\repo"
+
+          Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
+
+          Publish-PSResource -Path $FullPath -Repository "LocalRepo"
+
+          $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
+
+          dotnet tool install --global gpr
+
+          gpr push -k ${{ inputs.token }} $NupkgPath -r $NuGetUri
         }
-
-        $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
-
-        $LocalRepoPath = "${{ github.workspace }}\repo"
-
-        Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
-
-        Publish-PSResource -Path $FullPath -Repository "LocalRepo"
-
-        $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
-
-        dotnet tool install --global gpr
-
-        gpr push -k ${{ inputs.token }} $NupkgPath -r $NuGetUri
       shell: pwsh
