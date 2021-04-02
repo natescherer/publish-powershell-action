@@ -1,19 +1,22 @@
-name: Publish PowerShell to GitHub Packages
-description: Publish a PowerShell module or script to GitHub Packages.
+name: Publish PowerShell
+description: |
+  Publish a PowerShell module or script to GitHub Packages, the Posh Test
+  Gallery, or the PowerShell Gallery.
 inputs:
-  github-token:
+  token:
     description: |
-      Token to authenticate to GitHub.
+      Token to authenticate.
     required: true
-  publish-type:
+  target:
     description: |
-      Set to "module" to publish a module or "script" to publish a script.
+      Set to `packages` for GitHub Packages, `testgallery` for Posh Test 
+      Gallery, or `gallery` for PowerShell Gallery.
     required: true
   path:
     description: |
       Path to publish relative to the root of the project. For a module, 
-      should be a directory containing the .psm1 file in the root. For a script, 
-      should be the path to the .ps1 file.
+      should be the path to the .psm1 file. For a script, should be the 
+      path to the .ps1 file.
 runs:
   using: "composite"
   steps:
