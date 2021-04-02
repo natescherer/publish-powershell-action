@@ -22,6 +22,7 @@ runs:
   using: "composite"
   steps:
     - name: Publish to GitHub Packages
+      if: ${{ inputs.target == 'packages' }}
       run: |
         Write-Host "Starting Action..."
 
@@ -51,6 +52,5 @@ runs:
 
         dotnet tool install --global gpr
 
-        gpr push -k ${{ inputs.github-token }} $NupkgPath -r $NuGetUri
+        gpr push -k ${{ inputs.token }} $NupkgPath -r $NuGetUri
       shell: pwsh
-      if: ${{ inputs.target == 'packages' }}
