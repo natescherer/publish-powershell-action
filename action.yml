@@ -42,14 +42,14 @@ runs:
           if (Test-Path -Path $FullPath -PathType Container) {
             Write-Host "Input 'path' is a directory."
 
-            . .\FindPublishableFiles.ps1
+            . "${{ github.action_path }}\FindPublishableFiles.ps1"
             $FullPath = Find-PublishableFiles -Path $FullPath
           } else {
             Write-Host "Input 'path' is a file."
           }
 
           Write-Host "Registering local NuGet repository..."
-          $LocalRepoPath = "${{ github.workspace }}\repo"
+          $LocalRepoPath = "${{ github.action_path }}\repo"
           Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
 
           Write-Host "Publishing to local NuGet repostiory..."
