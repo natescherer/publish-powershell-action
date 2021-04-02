@@ -14,17 +14,30 @@ inputs:
     required: true
   path:
     description: |
-      Path to publish relative to the root of the project. For a module, 
-      should be the path to the .psm1 file. For a script, should be the 
-      path to the .ps1 file.
+      Path to publish relative to the root of the project. Can either 
+      be a .psm1 file, a .ps1 file, or a directory. If a directory, the action 
+      will search for a .psm1 file in the root. If none are found, it will then 
+      search for a .ps1 file in the root.
 runs:
   using: "composite"
   steps:
     - name: Publish to GitHub Packages
       run: |
+        Write-Host "Starting Action..."
+
+        Write-Host "Installing PowerShellGet 3..."
         Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
         $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
+
+        if (Test-Path -Path $FullPath -PathType Container) {
+          Write-Host "Input 'path' is a directory."
+
+          . .\FindPublishableFiles.ps1
+          $FullPath = Find-PublishableFiles -Path $FullPath
+        } else {
+          Write-Host "Input 'path' is a file."
+        }
 
         $NuGetUri = "https://nuget.pkg.github.com/${{ github.repository_owner }}"
 
