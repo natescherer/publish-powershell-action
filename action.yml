@@ -43,17 +43,20 @@ runs:
             Write-Host "Input 'path' is a directory."
 
             . "${{ github.action_path }}\Find-PublishableFiles.ps1"
-            $FullPath = Find-PublishableFiles -Path $FullPath
+            $ResolvedPath = Find-PublishableFiles -Path $FullPath
           } else {
             Write-Host "Input 'path' is a file."
+            $ResolvedPath = $FullPath
           }
+
+          Write-Host "Path resolved to: $ResolvedPath"
 
           Write-Host "Registering local NuGet repository..."
           $LocalRepoPath = "${{ github.action_path }}\repo"
           Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
 
           Write-Host "Publishing to local NuGet repostiory..."
-          Publish-PSResource -Path $FullPath -Repository "LocalRepo"
+          Publish-PSResource -Path $ResolvedPath -Repository "LocalRepo"
 
           Write-Host "Install gpr tool..."
           dotnet tool install --global gpr
