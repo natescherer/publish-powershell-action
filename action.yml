@@ -44,18 +44,14 @@ runs:
 
             . "${{ github.action_path }}\Find-PublishableFiles.ps1"
             $ResolvedPath = Find-PublishableFiles -Path $FullPath
-            if ($ResolvedPath -like "*.psd1") {
-              # PowerShellGet currently requires the module be in a folder named the same as the manifest
-              Write-Host "Creating directory for module publishing..."
-              $ManifestName = Split-Path -Path $ResolvedPath -LeafBase
-              $ManifestDir = Split-Path -Path $ResolvedPath -Parent
-              $ResolvedPath = "${{ github.action_path }}\$ManifestName"
-              New-Item -Path $TargetFolder -Type Directory | Out-Null
-              Copy-Item -Path "$ManifestDir\*" -Destination $ResolvedPath
-            }
           } else {
             Write-Host "Input 'path' is a file."
             $ResolvedPath = $FullPath
+          }
+
+          if ($ResolvedPath -like "*.psd1") {
+            . "${{ github.action_path }}\Copy-FilesToModuleDirectory.ps1"
+            $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath -ActionPath "${{ github.action_path }}"
           }
 
           Write-Host "Path to publish resolved to: $ResolvedPath"
