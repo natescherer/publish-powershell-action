@@ -58,6 +58,7 @@ runs:
 
           Write-Host "Registering local NuGet repository..."
           $LocalRepoPath = "${{ github.action_path }}\repo"
+          New-Item -Path $LocalRepoPath -Type Directory | Out-Null
           Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
 
           Write-Host "Publishing to local NuGet repostiory..."
@@ -72,6 +73,5 @@ runs:
           gpr push -k ${{ inputs.token }} $NupkgPath -r $NuGetUri
 
           Write-Host "Done!"
-          "ACTION_COMPLETED=true" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
         }
       shell: pwsh
