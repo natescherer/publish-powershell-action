@@ -7,15 +7,15 @@ function Find-PublishableFiles.ps1 {
 
     $OutputPath = ""
 
-    Write-Host "Searching for .psm1 files..."
-    $ModuleFile = Get-ChildItem -Path "$Path\*" -Include "*.psm1"
+    Write-Host "Searching for .psd1 files..."
+    $ModuleFile = Get-ChildItem -Path "$Path\*" -Include "*.psd1"
     if (!$ModuleFile) {
-        Write-Host "No .psm1 files found."
+        Write-Host "No .psd1 files found."
     }
     if ($ModuleFile.Count -gt 1) {
-        Write-Host "Multiple .psm1 files found."
+        Write-Host "Multiple .psd1 files found."
         Write-Host "This action cannot currently handle multiple files when 'path' input is set to a directory."
-        throw "Multiple .psm1 files found in 'path' input."
+        throw "Multiple .psd1 files found in 'path' input."
     }
     if ($ModuleFile.Count -eq 1) {
         Write-Host "Module path resolved: $($ModuleFile.Fullname)"

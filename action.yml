@@ -16,7 +16,7 @@ inputs:
     description: |
       Path to publish relative to the root of the project. Can either 
       be a .psm1 file, a .ps1 file, or a directory. If a directory, the action 
-      will search for a .psm1 file in the root. If none are found, it will then 
+      will search for a .psd1 file in the root. If none are found, it will then 
       search for a .ps1 file in the root.
 runs:
   using: "composite"
