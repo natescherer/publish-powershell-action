@@ -1,4 +1,4 @@
-function Find-PublishableFiles {
+function Find-PowerShellFiles {
     [CmdletBinding()]
     param(
         [parameter(Mandatory = $true)]

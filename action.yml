@@ -15,7 +15,7 @@ inputs:
   path:
     description: |
       Path to publish relative to the root of the project. Can either 
-      be a .psm1 file, a .ps1 file, or a directory. If a directory, the action 
+      be a .psd1 file, a .ps1 file, or a directory. If a directory, the action 
       will search for a .psd1 file in the root. If none are found, it will then 
       search for a .ps1 file in the root.
     required: true
@@ -42,8 +42,8 @@ runs:
           if (Test-Path -Path $FullPath -PathType Container) {
             Write-Host "Input 'path' is a directory."
 
-            . "${{ github.action_path }}\Find-PublishableFiles.ps1"
-            $ResolvedPath = Find-PublishableFiles -Path $FullPath
+            . "${{ github.action_path }}\Find-PowerShellFiles.ps1"
+            $ResolvedPath = Find-PowerShellFiles -Path $FullPath
           } else {
             Write-Host "Input 'path' is a file."
             $ResolvedPath = $FullPath
