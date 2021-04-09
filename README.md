@@ -1,2 +1,3 @@
-# powershell-publish-to-github-packages
-GitHub Action to public modules and scripts to GitHub Packages.
+# Publish PowerShell GitHub Action
+
+A GitHub Action to publish a PowerShell module or script to GitHub Packages, the Posh Test Gallery, or the PowerShell Gallery.
