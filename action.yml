@@ -20,7 +20,7 @@ inputs:
       search for a .ps1 file in the root.
     required: true
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Validate Inputs
       run: |
@@ -29,9 +29,8 @@ runs:
           throw "Invalid value provided for 'target' input."
         }
       shell: pwsh
-    - name: Publish to GitHub Packages
+    - name: Prepare to Publish
       run: |
-        if ("${{ inputs.target }}" -eq "packages") {
           Write-Host "Starting Action..."
 
           Write-Host "Installing PowerShellGet 3..."
@@ -54,7 +53,13 @@ runs:
             $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath -ActionPath "${{ github.action_path }}"
           }
 
-          Write-Host "Path to publish resolved to: $ResolvedPath"
+          Write-Host "Path resolved to: $ResolvedPath"
+          "RESOLVED_PATH=$ResolvedPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+      shell: pwsh
+    - name: Publish to GitHub Packages
+      run: |
+        if ("${{ inputs.target }}" -eq "packages") {
+          $ResolvedPath = $env:RESOLVED_PATH
 
           Write-Host "Registering local NuGet repository..."
           $LocalRepoPath = "${{ github.action_path }}\repo"
@@ -70,6 +75,20 @@ runs:
           Write-Host "Publishing to GitHub Packages..."
           $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
           gpr push -k ${{ inputs.token }} $NupkgPath -r "https://github.com/${{ github.repository }}"
+
+          Write-Host "Done!"
+        }
+      shell: pwsh
+    - name: Publish to Posh Test Gallery
+      run: |
+        if ("${{ inputs.target }}" -eq "testgallery") {
+          $ResolvedPath = $env:RESOLVED_PATH
+
+          Write-Host "Registering PoshTestGallery..."
+          Register-PSResourceRepository -Name "PoshTestGallery" -URL "https://www.poshtestgallery.com/api/v2/package/" -Trusted
+
+          Write-Host "Publishing to PoshTestGallery..."
+          Publish-PSResource -Path $ResolvedPath -Repository "LocalRepo" -ApiKey "${{ inputs.token }}"
 
           Write-Host "Done!"
         }
