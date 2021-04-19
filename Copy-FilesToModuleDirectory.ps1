@@ -19,7 +19,7 @@ function Copy-FilesToModuleDirectory {
 
     Write-Host "Copying files from $ManifestDir to $OutputPath..."
     New-Item -Path $OutputPath -Type Directory | Out-Null
-    Copy-Item -Path "$ManifestDir\*" -Destination $OutputPath
+    Copy-Item -Path "$ManifestDir\*" -Destination $OutputPath -Recurse
 
     $OutputPath
 }
