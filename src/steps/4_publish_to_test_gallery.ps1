@@ -1,4 +1,4 @@
-if ($env:INPUT_TARGET -eq "gallery") {
+if ($env:INPUT_TARGET -eq "testgallery") {
     $ResolvedPath = $env:RESOLVED_PATH
 
     Write-Host "Registering PoshTest Gallery..."
