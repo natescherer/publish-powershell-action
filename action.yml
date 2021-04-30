@@ -9,7 +9,7 @@ inputs:
     required: true
   target:
     description: |
-      Set to `packages` for GitHub Packages, `testgallery` for Posh Test 
+      Set to `packages` for GitHub Packages, `testgallery` for PoshTest 
       Gallery, or `gallery` for PowerShell Gallery.
     required: true
   path:
@@ -23,73 +23,37 @@ runs:
   using: composite
   steps:
     - name: Validate Inputs
-      run: |
-        $ValidTargets = @("packages","testgallery","gallery")
-        if ($ValidTargets -notcontains "${{ inputs.target }}") {
-          throw "Invalid value provided for 'target' input."
-        }
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\1_validate.ps1"
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
     - name: Prepare to Publish
-      run: |
-          Write-Host "Starting Action..."
-
-          Write-Host "Installing PowerShellGet 3..."
-          Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
-
-          $FullPath = "${{ github.workspace }}\${{ inputs.path }}"
-
-          if (Test-Path -Path $FullPath -PathType Container) {
-            Write-Host "Input 'path' is a directory."
-
-            . "${{ github.action_path }}\Find-PowerShellFiles.ps1"
-            $ResolvedPath = Find-PowerShellFiles -Path $FullPath
-          } else {
-            Write-Host "Input 'path' is a file."
-            $ResolvedPath = $FullPath
-          }
-
-          if ($ResolvedPath -like "*.psd1") {
-            . "${{ github.action_path }}\Copy-FilesToModuleDirectory.ps1"
-            $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath -ActionPath "${{ github.action_path }}"
-          }
-
-          Write-Host "Path resolved to: $ResolvedPath"
-          "RESOLVED_PATH=$ResolvedPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\2_prepare.ps1"
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
     - name: Publish to GitHub Packages
-      run: |
-        if ("${{ inputs.target }}" -eq "packages") {
-          $ResolvedPath = $env:RESOLVED_PATH
-
-          Write-Host "Registering local NuGet repository..."
-          $LocalRepoPath = "${{ github.action_path }}\repo"
-          New-Item -Path $LocalRepoPath -Type Directory | Out-Null
-          Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
-
-          Write-Host "Publishing to local NuGet repostiory..."
-          Publish-PSResource -Path $ResolvedPath -Repository "LocalRepo"
-
-          Write-Host "Install gpr tool..."
-          dotnet tool install --global gpr
-
-          Write-Host "Publishing to GitHub Packages..."
-          $NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
-          gpr push -k ${{ inputs.token }} $NupkgPath -r "https://github.com/${{ github.repository }}"
-
-          Write-Host "Done!"
-        }
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\3_publish_to_packages.ps1"
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
     - name: Publish to Posh Test Gallery
-      run: |
-        if ("${{ inputs.target }}" -eq "testgallery") {
-          $ResolvedPath = $env:RESOLVED_PATH
-
-          Write-Host "Registering PoshTestGallery..."
-          Register-PSResourceRepository -Name "PoshTestGallery" -URL "https://www.poshtestgallery.com/api/v2/package/" -Trusted
-
-          Write-Host "Publishing to PoshTestGallery..."
-          Publish-PSResource -Path $ResolvedPath -Repository "PoshTestGallery" -ApiKey "${{ inputs.token }}"
-
-          Write-Host "Done!"
-        }
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\4_publish_to_test_gallery.ps1"
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
+      shell: pwsh
+    - name: Publish to PowerShell Gallery
+      run: . "$env:GITHUB_ACTION_PATH\src\steps\5_publish_to_gallery.ps1"
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
