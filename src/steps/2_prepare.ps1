@@ -1,6 +1,9 @@
 Write-Host "Starting Action..."
 
 Write-Host "Installing PowerShellGet 3..."
+# Ensuring PowerShellGet stable is latest version
+Install-Module -Name PowerShellGet -Force -AllowClobber
+# Installing PowerShellGet 3 Prerelease
 # Pinned to old version due to https://github.com/PowerShell/PowerShellGet/issues/835
 Install-Module -Name PowerShellGet -RequiredVersion 3.0.16-beta16 -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 Get-PSResource
