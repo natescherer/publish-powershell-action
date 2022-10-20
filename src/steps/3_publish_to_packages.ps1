@@ -1,7 +1,7 @@
 Write-Host "Registering local NuGet repository..."
 $LocalRepoPath = "$env:GITHUB_ACTION_PATH\repo"
 New-Item -Path $LocalRepoPath -Type Directory | Out-Null
-Register-PSResourceRepository -Name "LocalRepo" -URL $LocalRepoPath
+Register-PSResourceRepository -Name "LocalRepo" -Uri $LocalRepoPath
 
 Write-Host "Publishing to local NuGet repository..."
 Publish-PSResource -Path $env:RESOLVED_PATH -Repository "LocalRepo"
