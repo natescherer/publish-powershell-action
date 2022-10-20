@@ -1,7 +1,7 @@
 Write-Host "Starting Action..."
 
 Write-Host "Installing PowerShellGet 3..."
-Install-Module PowerShellGet -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
+Install-Module -Name PowerShellGet -RequiredVersion 3.0.16-beta16 -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
 $FullPath = "$env:GITHUB_WORKSPACE\$env:INPUT_PATH"
 
