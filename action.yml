@@ -1,7 +1,6 @@
 name: Publish PowerShell
 description: |
-  Publish a PowerShell module or script to GitHub Packages, the Posh Test
-  Gallery, or the PowerShell Gallery.
+  Publish a PowerShell module or script to GitHub Packages, the PowerShell Gallery, or a NuGet repository via PowerShellGet 3.
 inputs:
   token:
     description: |
@@ -9,8 +8,7 @@ inputs:
     required: true
   target:
     description: |
-      Set to `packages` for GitHub Packages, `testgallery` for PoshTest 
-      Gallery, or `gallery` for PowerShell Gallery.
+      Set to `packages` for GitHub Packages, `gallery` for the PowerShell Gallery, or `nuget` for a NuGet repository.
     required: true
   path:
     description: |
@@ -19,6 +17,10 @@ inputs:
       will search for a .psd1 file in the root. If none are found, it will then 
       search for a .ps1 file in the root.
     required: true
+  nugetUrl:
+    description: |
+      Url to use with NuGet target. Should be a NuGet v2 or v3 endpoint.
+    required: false
 runs:
   using: composite
   steps:
@@ -37,21 +39,37 @@ runs:
         INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
     - name: Publish to GitHub Packages
-      run: . "$env:GITHUB_ACTION_PATH\src\steps\3_publish_to_packages.ps1"
+      run: |
+        if ($env:INPUT_TARGET -eq "packages") {
+          . "$env:GITHUB_ACTION_PATH\src\steps\3_publish_to_packages.ps1"
+        } else {
+          Write-Host "Skipping as this target was not selected..."
+        }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
       shell: pwsh
-    - name: Publish to Posh Test Gallery
-      run: . "$env:GITHUB_ACTION_PATH\src\steps\4_publish_to_test_gallery.ps1"
+    - name: Publish to NuGet Repository
+      run: |
+        if ($env:INPUT_TARGET -eq "nuget") {
+          . "$env:GITHUB_ACTION_PATH\src\steps\4_publish_to_nuget.ps1"
+        } else {
+          Write-Host "Skipping as this target was not selected..."
+        }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
       shell: pwsh
     - name: Publish to PowerShell Gallery
-      run: . "$env:GITHUB_ACTION_PATH\src\steps\5_publish_to_gallery.ps1"
+      run: |
+        if ($env:INPUT_TARGET -eq "gallery") {
+          . "$env:GITHUB_ACTION_PATH\src\steps\5_publish_to_gallery.ps1"
+        } else {
+          Write-Host "Skipping as this target was not selected..."
+        }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
