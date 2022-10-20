@@ -30,6 +30,7 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
       shell: pwsh
     - name: Prepare to Publish
       run: . "$env:GITHUB_ACTION_PATH\src\steps\2_prepare.ps1"
@@ -37,6 +38,7 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
       shell: pwsh
     - name: Publish to GitHub Packages
       run: |
@@ -49,6 +51,7 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
       shell: pwsh
     - name: Publish to NuGet Repository
       run: |
@@ -74,4 +77,5 @@ runs:
         INPUT_TOKEN: ${{ inputs.token }}
         INPUT_TARGET: ${{ inputs.target }}
         INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
       shell: pwsh
