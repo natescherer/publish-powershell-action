@@ -1,6 +1,7 @@
 Write-Host "Starting Action..."
 
 Write-Host "Installing PowerShellGet 3..."
+# Pinned to old version due to https://github.com/PowerShell/PowerShellGet/issues/835
 Install-Module -Name PowerShellGet -RequiredVersion 3.0.16-beta16 -AllowPrerelease -Force -Repository PSGallery -SkipPublisherCheck
 
 $FullPath = "$env:GITHUB_WORKSPACE\$env:INPUT_PATH"
