@@ -1,0 +1,53 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+      - bugfix/**
+      - feature/**
+  workflow_dispatch:
+jobs:
+  Test:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: pwsh
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Set Variables
+        run: |
+          "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Create Artifactory Repo
+        run: |
+          $Endpoint = "https://natescherer.jfrog.io/api/repositories/publish-powershell-action-ci"
+          $JsonPath = Join-Path $env:GITHUB_WORKSPACE test library NewArtifactoryRepo.json
+          Invoke-WebRequest -Uri $Endpoint -Method PUT -InFile $JsonPath
+      # - name: Publish to Packages
+      #   id: packages
+      #   uses: ./
+      #   with:
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+      #     target: packages
+      #     path: test
+      # - name: Publish to NuGet
+      #   id: nuget
+      #   uses: ./
+      #   with:
+      #     path: test\CHANGELOG2.md
+      #     mode: release
+      #     releaseversion: 2.0.0
+      # - name: Run Pester Tests
+      #   id: pester
+      #   uses: zyborg/pester-tests-report@v1
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     report_name: TestResults_${{ runner.os }}
+      #     tests_fail_step: true
+      #     gist_name: ${{ env.BARE_REPOSITORY }}_TestResults_${{ runner.os }}.md
+      #     gist_badge_label: ${{ runner.os }}
+      #     gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
