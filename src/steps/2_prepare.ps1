@@ -21,7 +21,7 @@ if (Test-Path -Path $FullPath -PathType Container) {
 
 if ($ResolvedPath -like "*.psd1") {
     . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
-    $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath -ActionPath $env:GITHUB_ACTION_PATH
+    $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
 }
 
 Write-Host "Path resolved to: $ResolvedPath"
