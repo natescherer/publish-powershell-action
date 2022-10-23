@@ -22,6 +22,7 @@ jobs:
       - name: Set Variables
         run: |
           "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+          "RUNNER_OS_LOWER=$($env.RUNNER_OS.ToLower())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup JFrog CLI
@@ -46,7 +47,7 @@ jobs:
         with:
           token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
           target: nuget
-          path: test/library/testmodule-${{ runner.os }}
+          path: test/library/testmodule-${{ env.RUNNER_OS_LOWER }}
           nugetUrl: ${{ env.JF_URL }}
       # - name: Run Pester Tests
       #   id: pester
