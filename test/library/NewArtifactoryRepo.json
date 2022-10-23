@@ -1,5 +1,0 @@
-{
-    "rclass": "local",
-    "packageType": "nuget",
-    "description": "Test repo for CI for github.com/natescherer/publish-powershell-action"
-}
