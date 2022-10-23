@@ -59,7 +59,7 @@ jobs:
           gist_name: ${{ env.BARE_REPOSITORY }}_TestResults_${{ runner.os }}.md
           gist_badge_label: ${{ runner.os }}
           gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
-      - name: Clean Up Artifactory Repo
-        if: always()
-        run: |
-          jf rt repo-delete changelog-management-action-$env:RUNNER_OS_LOWER
+      # - name: Clean Up Artifactory Repo
+      #   if: always()
+      #   run: |
+      #     jf rt repo-delete changelog-management-action-$env:RUNNER_OS_LOWER
