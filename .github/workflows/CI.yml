@@ -46,7 +46,7 @@ jobs:
         with:
           token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
           target: nuget
-          path: ${{ join(['test/library/testmodule-', env.RUNNER_OS], '') }}
+          path: ${{ format('test/library/testmodule-{0}', env.RUNNER_OS) }}
           nugetUrl: ${{ env.JF_URL }}
       # - name: Run Pester Tests
       #   id: pester
