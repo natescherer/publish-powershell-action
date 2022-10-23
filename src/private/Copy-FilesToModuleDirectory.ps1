@@ -13,7 +13,7 @@ function Copy-FilesToModuleDirectory {
     $ManifestName = Split-Path -Path $Path -LeafBase
     $ManifestDir = Split-Path -Path $Path -Parent
 
-    $OutputPath = "$env:RUNNER_TEMP\$ManifestName"
+    $OutputPath = Join-Path $env:RUNNER_TEMP $ManifestName
 
     Write-Host "Copying files from $ManifestDir to $OutputPath..."
     New-Item -Path $OutputPath -Type Directory | Out-Null
