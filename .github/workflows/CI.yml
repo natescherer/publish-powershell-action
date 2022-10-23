@@ -6,6 +6,8 @@ on:
       - bugfix/**
       - feature/**
   workflow_dispatch:
+env:
+  JF_URL: https://natescherer.jfrog.io
 jobs:
   Test:
     runs-on: ${{ matrix.os }}
@@ -25,7 +27,6 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v3
         env:
-          JF_URL: https://natescherer.jfrog.io
           JF_USER: ${{ secrets.JF_USER }}
           JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
       - name: Create Artifactory Repo
@@ -39,13 +40,14 @@ jobs:
       #     token: ${{ secrets.GITHUB_TOKEN }}
       #     target: packages
       #     path: test
-      # - name: Publish to NuGet
-      #   id: nuget
-      #   uses: ./
-      #   with:
-      #     path: test\CHANGELOG2.md
-      #     mode: release
-      #     releaseversion: 2.0.0
+      - name: Publish to NuGet
+        id: nuget
+        uses: ./
+        with:
+          token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
+          target: nuget
+          path: test/library/testmodule-${{ env.RUNNER_OS }}
+          nugetUrl: ${{ env.JF_URL }}
       # - name: Run Pester Tests
       #   id: pester
       #   uses: zyborg/pester-tests-report@v1
