@@ -30,7 +30,7 @@ CompanyName = 'Nate Scherer'
 Copyright = '(c) Nate Scherer. All rights reserved.'
 
 # Description of the functionality provided by this module
-# Description = ''
+Description   = 'A test module.'
 
 # Minimum version of the PowerShell engine required by this module
 # PowerShellVersion = ''
