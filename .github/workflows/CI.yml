@@ -23,6 +23,7 @@ jobs:
         run: |
           "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
           "RUNNER_OS_LOWER=$($env:RUNNER_OS.ToLower())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+          "VERSION_SUFFIX=(Get-Date -UFormat %s -Millisecond 0)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup JFrog CLI
@@ -34,6 +35,11 @@ jobs:
         run: |
           $JsonPath = Join-Path $env:GITHUB_WORKSPACE test library artifactory_repo_$($env:RUNNER_OS.ToLower()).json
           jf rt repo-create $JsonPath
+      - name: Update Metadata
+        uses: natescherer/update-powershell-metadata-action@v2.0.0
+        with:
+          paths: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
+          version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}
       # - name: Publish to Packages
       #   id: packages
       #   uses: ./
@@ -59,7 +65,7 @@ jobs:
           gist_name: ${{ env.BARE_REPOSITORY }}_TestResults_${{ runner.os }}.md
           gist_badge_label: ${{ runner.os }}
           gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
-      - name: Clean Up Artifactory Repo
-        if: always()
-        run: |
-          jf rt repo-delete publish-powershell-action-$env:RUNNER_OS_LOWER
+      # - name: Clean Up Artifactory Repo
+      #   if: always()
+      #   run: |
+      #     jf rt repo-delete publish-powershell-action-$env:RUNNER_OS_LOWER
