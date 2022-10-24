@@ -19,10 +19,11 @@ if (Test-Path -Path $FullPath -PathType Container) {
     $ResolvedPath = $FullPath
 }
 
-# if ($ResolvedPath -like "*.psd1") {
-#     . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
-#     $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
-# }
+if ($ResolvedPath -like "*.psd1") {
+    # . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
+    # $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
+    $ResolvedPath = Split-Path -Path $ResolvedPath
+}
 
 Write-Host "Path resolved to: $ResolvedPath"
 "RESOLVED_PATH=$ResolvedPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
