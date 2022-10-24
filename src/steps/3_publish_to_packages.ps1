@@ -1,5 +1,5 @@
 Write-Host "Registering local NuGet repository..."
-$LocalRepoPath = "$env:GITHUB_ACTION_PATH\repo"
+$LocalRepoPath = Join-Path $env:GITHUB_ACTION_PATH "repo"
 New-Item -Path $LocalRepoPath -Type Directory | Out-Null
 Register-PSResourceRepository -Name "LocalRepo" -Uri $LocalRepoPath
 
