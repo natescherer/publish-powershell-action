@@ -25,15 +25,15 @@ jobs:
           "RUNNER_OS_LOWER=$($env:RUNNER_OS.ToLower())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup JFrog CLI
-        uses: jfrog/setup-jfrog-cli@v3
-        env:
-          JF_USER: ${{ secrets.JF_USER }}
-          JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
-      - name: Create Artifactory Repo
-        run: |
-          $JsonPath = Join-Path $env:GITHUB_WORKSPACE test library artifactory_repo_$($env:RUNNER_OS.ToLower()).json
-          jf rt repo-create $JsonPath
+      # - name: Setup JFrog CLI
+      #   uses: jfrog/setup-jfrog-cli@v3
+      #   env:
+      #     JF_USER: ${{ secrets.JF_USER }}
+      #     JF_ACCESS_TOKEN: ${{ secrets.JF_ACCESS_TOKEN }}
+      # - name: Create Artifactory Repo
+      #   run: |
+      #     $JsonPath = Join-Path $env:GITHUB_WORKSPACE test library artifactory_repo_$($env:RUNNER_OS.ToLower()).json
+      #     jf rt repo-create $JsonPath
       # - name: Publish to Packages
       #   id: packages
       #   uses: ./
