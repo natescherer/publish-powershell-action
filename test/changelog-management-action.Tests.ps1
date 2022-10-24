@@ -4,6 +4,7 @@ Describe 'Publish to NuGet' {
     It 'Install Module' {
         $ModuleName = "TestModule"
         $RepoName = "JFrog"
+        Write-Host "Registering Repo $env:RUNNER_OS_LOWER"
         Register-PSRepository -Name $RepoName -SourceLocation "https://natescherer.jfrog.io/artifactory/api/nuget/changelog-management-action-$env:RUNNER_OS_LOWER" -InstallationPolicy Trusted
         Install-PSResource -Name $ModuleName -Repository $RepoName
         Get-PSResource -Name $ModuleName | Should -Not -BeNullOrEmpty
