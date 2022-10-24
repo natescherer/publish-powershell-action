@@ -62,4 +62,4 @@ jobs:
       - name: Clean Up Artifactory Repo
         if: always()
         run: |
-          jf rt repo-delete changelog-management-action-$env:RUNNER_OS_LOWER
+          jf rt repo-delete publish-powershell-action-$env:RUNNER_OS_LOWER
