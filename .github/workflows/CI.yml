@@ -47,7 +47,7 @@ jobs:
         with:
           token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
           target: nuget
-          path: test/library/testmodule-${{ env.RUNNER_OS_LOWER }}
+          path: test/library/TestModule
           nugetUrl: ${{ env.JF_URL }}/artifactory/api/nuget/changelog-management-action-${{ env.RUNNER_OS_LOWER }}
       - name: Run Pester Tests
         id: pester
