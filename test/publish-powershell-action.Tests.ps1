@@ -8,5 +8,6 @@ Describe 'Publish to NuGet' {
         Register-PSResourceRepository -Name $RepoName -Uri "https://natescherer.jfrog.io/artifactory/api/nuget/nuget" -Trusted
         Install-PSResource -Name $ModuleName -Repository $RepoName -Version $Version -Prerelease
         Get-PSResource -Name $ModuleName | Should -Not -BeNullOrEmpty
+        Uninstall-PSResource -Name $ModuleName -Version $Version -Prerelease
     }
 }
