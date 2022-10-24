@@ -47,8 +47,8 @@ jobs:
         with:
           token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
           target: nuget
-          path: test/library/TestModule
-          nugetUrl: ${{ env.JF_URL }}/artifactory/api/nuget/changelog-management-action-${{ env.RUNNER_OS_LOWER }}
+          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}
+          nugetUrl: ${{ env.JF_URL }}/artifactory/api/nuget/nuget
       - name: Run Pester Tests
         id: pester
         uses: zyborg/pester-tests-report@v1
