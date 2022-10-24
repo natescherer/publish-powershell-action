@@ -31,13 +31,13 @@ jobs:
         with:
           path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
           version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}
-      # - name: Publish to Packages
-      #   id: packages
-      #   uses: ./
-      #   with:
-      #     token: ${{ secrets.GITHUB_TOKEN }}
-      #     target: packages
-      #     path: test
+      - name: Publish to Packages
+        id: packages
+        uses: ./
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: packages
+          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}
       - name: Publish to NuGet
         id: nuget
         uses: ./
