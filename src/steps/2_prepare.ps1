@@ -20,8 +20,6 @@ if (Test-Path -Path $FullPath -PathType Container) {
 }
 
 if ($ResolvedPath -like "*.psd1") {
-    # . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
-    # $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
     $ResolvedPath = Split-Path -Path $ResolvedPath
 }
 
