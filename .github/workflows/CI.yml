@@ -56,3 +56,5 @@ jobs:
           gist_name: ${{ env.BARE_REPOSITORY }}_TestResults_${{ runner.os }}.md
           gist_badge_label: ${{ runner.os }}
           gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
