@@ -2,7 +2,7 @@ $global:NL = [System.Environment]::NewLine
 
 Describe 'Publish to NuGet' {
     It 'Install Module' {
-        $ModuleName = "TestModule"
+        $ModuleName = "TestModule-$env:RUNNER_OS_LOWER"
         $RepoName = "JFrog"
         Register-PSRepository -Name $RepoName -SourceLocation "https://natescherer.jfrog.io/artifactory/api/nuget/nuget" -InstallationPolicy Trusted
         Install-PSResource -Name $ModuleName -Repository $RepoName
