@@ -36,7 +36,7 @@ jobs:
           $JsonPath = Join-Path $env:GITHUB_WORKSPACE test library artifactory_repo_$($env:RUNNER_OS.ToLower()).json
           jf rt repo-create $JsonPath
       - name: Update Metadata
-        uses: natescherer/update-powershell-metadata-action@v2.0.0
+        uses: natescherer/update-powershell-metadata-action@main
         with:
           path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
           version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}
