@@ -38,7 +38,7 @@ jobs:
       - name: Update Metadata
         uses: natescherer/update-powershell-metadata-action@v2.0.0
         with:
-          paths: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
+          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
           version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}
       # - name: Publish to Packages
       #   id: packages
