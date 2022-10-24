@@ -40,6 +40,10 @@ jobs:
         with:
           path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
           version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.RUNNER_OS_LOWER}}
+          path: /
       # - name: Publish to Packages
       #   id: packages
       #   uses: ./
