@@ -34,17 +34,16 @@ jobs:
       - name: Push SemVer Tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.gitversion.outputs.SemVer }}
-          force_push_tag: true
+          tag: v${{ steps.gitversion.outputs.SemVer }}
       - name: Push Major Tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.gitversion.outputs.Major }}
+          tag: v${{ steps.gitversion.outputs.Major }}
           force_push_tag: true
       - name: Push Major.Minor Tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: ${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
+          tag: v${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
           force_push_tag: true
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
