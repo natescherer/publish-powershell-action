@@ -1,6 +1,9 @@
 name: Publish PowerShell
 description: |
   Publish a PowerShell module or script to GitHub Packages, the PowerShell Gallery, or a NuGet repository via PowerShellGet 3.
+branding:
+  icon: book
+  color: blue
 inputs:
   token:
     description: |
@@ -12,9 +15,7 @@ inputs:
     required: true
   path:
     description: |
-      Path to publish relative to the root of the project. Can either 
-      be a .psd1 file, a .ps1 file, or a directory. If a directory, the action 
-      will search for a .psd1 file in the root. If none are found, it will then 
+      Path to publish relative to the root of the project. Can either be a .psd1 file, a .ps1 file, or a directory. If a directory, the action will search for a .psd1 file in the root. If none are found, it will then 
       search for a .ps1 file in the root.
     required: true
   nugetUrl:
