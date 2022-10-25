@@ -1,7 +1,4 @@
 # Publish PowerShell GitHub Action
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![PowerShell on Windows](https://raw.githubusercontent.com/gist/natescherer/13d7121be73557627d3908f6e5559d9f/raw/4f7747f24063595a285dd33192fe1fd57fe60dee/publish-powershell-action_TestResults_Windows.md_badge.svg)](https://gist.github.com/natescherer/13d7121be73557627d3908f6e5559d9f) [![PowerShell on Linux](https://raw.githubusercontent.com/gist/natescherer/7006cea198e1726f203cde5604179d4b/raw/9aed4cd805da75c33a98968f9980f70fd7a6f7c9/publish-powershell-action_TestResults_Linux.md_badge.svg)](https://gist.github.com/natescherer/7006cea198e1726f203cde5604179d4b) [![PowerShell on macOS](https://raw.githubusercontent.com/gist/natescherer/cbc42445c9b9161db9d83db09927a66c/raw/4e43ee59dd608716106e1b3abbdf7b933b95980a/publish-powershell-action_TestResults_macOS.md_badge.svg)](https://gist.github.com/natescherer/cbc42445c9b9161db9d83db09927a66c)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
