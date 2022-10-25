@@ -5,8 +5,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-
-## [1.0.2] - 2022-10-25
 ### Fixed
 - Adding missing branding for GitHub Marketplace
 
@@ -14,6 +12,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial release
 
-[Unreleased]: https://github.com/natescherer/publish-powershell-action/compare/v1.0.2..HEAD
-[1.0.2]: https://github.com/natescherer/publish-powershell-action/compare/v1.0.0..v1.0.2
+[Unreleased]: https://github.com/natescherer/publish-powershell-action/compare/v1.0.0..HEAD
 [1.0.0]: https://github.com/natescherer/publish-powershell-action/tree/v1.0.0
