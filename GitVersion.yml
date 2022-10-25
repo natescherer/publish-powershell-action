@@ -1,0 +1,24 @@
+mode: ContinuousDeployment
+next-version: 1.0.0
+continuous-delivery-fallback-tag: ''
+branches:
+  main:
+    regex: main$
+    tag: ''
+    increment: Patch
+    prevent-increment-of-merged-branch-version: true
+    track-merge-target: false
+  bugfix:
+    regex: bug(fix)?[-/]
+    source-branches:
+    - main
+    tag: alpha
+    increment: Patch
+    track-merge-target: false
+  feature:
+    regex: f(eature)?[-/]
+    source-branches:
+    - main
+    tag: alpha
+    increment: Minor
+    track-merge-target: false

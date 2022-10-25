@@ -27,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Update Metadata
-        uses: natescherer/update-powershell-metadata-action@main
+        uses: natescherer/update-powershell-metadata-action@v2
         with:
           path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
           version: 1.0.1-alpha${{ env.VERSION_SUFFIX }}

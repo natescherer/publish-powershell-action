@@ -1,0 +1,65 @@
+name: Release
+on: 
+  workflow_dispatch:
+    inputs:
+      ReleaseHeader:
+        description: The header to be added to the release.
+        required: false
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.14
+        with:
+          versionSpec: '5.x'
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.14
+      - name: Update README Inputs/Outputs
+        uses: mdvorak/update-action-readme@v1
+      - name: Update Changelog
+        id: changelog
+        uses: natescherer/changelog-management-action@main
+        with:
+          mode: release
+          releaseVersion: ${{ steps.gitversion.outputs.SemVer }}
+      - name: Push SemVer Tag
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.gitversion.outputs.SemVer }}
+      - name: Push Major Tag
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.gitversion.outputs.Major }}
+      - name: Push Major.Minor Tag
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: Update README and CHANGELOG
+          title: Update README and CHANGELOG
+          delete-branch: true
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: v${{ steps.gitversion.outputs.SemVer }}
+          tag_name: v${{ steps.gitversion.outputs.SemVer }}
+          body: |
+            # Release v${{ steps.gitversion.outputs.SemVer }}
+            ${{ github.event.inputs.ReleaseHeader}}
+
+            ## Changes
+            ${{ steps.changelog.outputs.releasenotes }}
