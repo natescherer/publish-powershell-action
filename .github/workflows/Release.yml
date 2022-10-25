@@ -45,12 +45,11 @@ jobs:
         with:
           tag: v${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
           force_push_tag: true
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+      - name: Commit Changes to Repo
+        uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit-message: Update README and CHANGELOG
-          title: Update README and CHANGELOG
-          delete-branch: true
+          commit_message: Release v${{ steps.gitversion.outputs.SemVer }}
+          file_pattern: ":!test\\* :!test/*"
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
