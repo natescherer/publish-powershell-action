@@ -5,7 +5,7 @@
 [![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
-A GitHub Action to publish a PowerShell module or script to GitHub Packages,a NuGet repository, or the PowerShell Gallery.
+A GitHub Action to publish a PowerShell module or script to GitHub Packages, a NuGet repository, or the PowerShell Gallery.
 
 It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 
