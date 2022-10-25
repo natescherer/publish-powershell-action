@@ -49,7 +49,7 @@ It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 | :---: | :------: | :-----: | ----------- |
 | `token` | true |  | Token to authenticate. |
 | `target` | true |  | Set to `packages` for GitHub Packages, `gallery` for the PowerShell Gallery, or `nuget` for a NuGet repository. |
-| `path` | true |  | Path to publish relative to the root of the project. Can either <br>be a .psd1 file, a .ps1 file, or a directory. If a directory, the action <br>will search for a .psd1 file in the root. If none are found, it will then <br>search for a .ps1 file in the root. |
+| `path` | true |  | Path to publish relative to the root of the project. Can either be a .psd1 file, a .ps1 file, or a directory. If a directory, the action will search for a .psd1 file in the root. If none are found, it will then <br>search for a .ps1 file in the root. |
 | `nugetUrl` | false |  | Url to use with NuGet target. Should be a NuGet v2 or v3 endpoint. |
 
 <!--(inputs-end)-->
