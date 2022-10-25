@@ -15,6 +15,10 @@ function Copy-FilesToModuleDirectory {
 
     $OutputPath = Join-Path $env:RUNNER_TEMP $ManifestName
 
+    If (Test-Path $OutputPath) {
+        Remove-Item -LiteralPath $OutputPath -Force -Recurse
+    }
+
     Write-Host "Copying files from $ManifestDir to $OutputPath..."
     New-Item -Path $OutputPath -Type Directory | Out-Null
     Copy-Item -Path "$ManifestDir\*" -Destination $OutputPath -Recurse
