@@ -32,20 +32,20 @@ jobs:
           mode: release
           releaseVersion: ${{ steps.gitversion.outputs.SemVer }}
       - name: Push SemVer Tag
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: rickstaa/action-create-tag@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.gitversion.outputs.SemVer }}
+          tag: ${{ steps.gitversion.outputs.SemVer }}
+          force_push_tag: true
       - name: Push Major Tag
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: rickstaa/action-create-tag@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.gitversion.outputs.Major }}
+          tag: ${{ steps.gitversion.outputs.Major }}
+          force_push_tag: true
       - name: Push Major.Minor Tag
-        uses: mathieudutour/github-tag-action@v6.0
+        uses: rickstaa/action-create-tag@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: ${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
+          tag: ${{ steps.gitversion.outputs.Major }}.${{ steps.gitversion.outputs.Minor }}
+          force_push_tag: true
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
