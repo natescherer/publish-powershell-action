@@ -67,3 +67,4 @@ jobs:
           gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILD_NUMBER: ${{ needs.GetBuildNumber.outputs.build_number }}
