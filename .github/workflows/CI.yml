@@ -6,8 +6,6 @@ on:
       - bugfix/**
       - feature/**
   workflow_dispatch:
-env:
-  JF_URL: https://natescherer.jfrog.io
 jobs:
   Test:
     runs-on: ${{ matrix.os }}
@@ -42,10 +40,10 @@ jobs:
         id: nuget
         uses: ./
         with:
-          token: ${{ secrets.JF_USER }}:${{ secrets.JF_ACCESS_TOKEN }}
+          token: ${{ secrets.CLOUDSMITH_KEY }}
           target: nuget
           path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}
-          nugetUrl: ${{ env.JF_URL }}/artifactory/api/nuget/nuget
+          nugetUrl: https://nuget.cloudsmith.io/natescherer/publish-powershell-action/v3/index.json
       - name: Run Pester Tests
         id: pester
         uses: zyborg/pester-tests-report@v1
