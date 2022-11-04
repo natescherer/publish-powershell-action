@@ -27,7 +27,7 @@ jobs:
         uses: mdvorak/update-action-readme@v1
       - name: Update Changelog
         id: changelog
-        uses: natescherer/changelog-management-action@main
+        uses: natescherer/changelog-management-action@v1
         with:
           mode: release
           releaseVersion: ${{ steps.gitversion.outputs.SemVer }}
