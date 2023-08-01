@@ -46,28 +46,56 @@ if (Test-Path -Path $FullPath -PathType Container) {
     $ResolvedPath = $FullPath
 }
 
+$ImportSting = ""
+$UninstallString = ""
 if ($ResolvedPath -like "*.psd1") {
     # This is necessary due to weird folder naming requirements for module publishing
     . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
     $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
 
     $ManifestData = Import-PowerShellDataFile $ResolvedPath
-    foreach ($Requirement in $ManifestData.RequiredModules) {
+    if ($ManifestData.RequiredModules) {
         Write-Host "Now installing RequiredModules to local environment, as currently required by Publish-PSResource..."
         Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-        if ($Requirement.GetType().Name -eq "String") {
-            Write-Host "Installing $Requirement..."
-            Install-Module -Name $Requirement -PassThru
-        } else {
-            if ($Requirement.RequiredVersion) {
-                Write-Host "Installing $($Requirement.ModuleName) with RequiredVersion $($Requirement.RequiredVersion)..."
-                Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion -PassThru
-            } elseif ($Requirement.ModuleVersion) {
-                Write-Host "Installing $($Requirement.ModuleName) with MinimumVersion $($Requirement.ModuleVersion)..."
-                Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion -PassThru
-            } elseif ($Requirement.MaximumVersion) {
-                Write-Host "Installing $($Requirement.ModuleName) with MaximumVersion $($Requirement.MaximumVersion)..."
-                Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion -PassThru
+        foreach ($Requirement in $ManifestData.RequiredModules) {
+            if ($Requirement.GetType().Name -eq "String") {
+                if (Get-InstalledModule -Name $Requirement -ErrorAction SilentlyContinue) {
+                    Write-Host "Module $Requirement is already installed, skipping."
+                } else {
+                    Write-Host "Installing $Requirement..."
+                    Install-Module -Name $Requirement
+                    $ImportString += "Import-Module -Name $Requirement; "
+                    $UninstallString += "Uninstall-Module -Name $Requirement; "
+                }
+            } else {
+                if ($Requirement.RequiredVersion) {
+                    if (Get-InstalledModule -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion -ErrorAction SilentlyContinue) {
+                        Write-Host "Module $($Requirement.ModuleName) with RequiredVersion $($Requirement.RequiredVersion) is already installed, skipping."
+                    } else {
+                        Write-Host "Installing $($Requirement.ModuleName) with RequiredVersion $($Requirement.RequiredVersion)..."
+                        Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion
+                        $ImportString += "Import-Module -Name $($Requirement.ModuleName) -RequiredVersion $($Requirement.RequiredVersion); "
+                        $UninstallString += "Uninstall-Module -Name $($Requirement.ModuleName) -RequiredVersion $($Requirement.RequiredVersion); "
+                    }
+                } elseif ($Requirement.ModuleVersion) {
+                    if (Get-InstalledModule -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion -ErrorAction SilentlyContinue) {
+                        Write-Host "Module $($Requirement.ModuleName) with MinimumVersion $($Requirement.ModuleVersion) is already installed, skipping."
+                    } else {
+                        Write-Host "Installing $($Requirement.ModuleName) with MinimumVersion $($Requirement.ModuleVersion)..."
+                        Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion
+                        $ImportString += "Import-Module -Name $($Requirement.ModuleName) -MinimumVersion $($Requirement.ModuleVersion); "
+                        $UninstallString += "Uninstall-Module -Name $($Requirement.ModuleName) -MinimumVersion $($Requirement.ModuleVersion); "
+                    }
+                } elseif ($Requirement.MaximumVersion) {
+                    if (Get-InstalledModule -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion -ErrorAction SilentlyContinue) {
+                        Write-Host "Module $($Requirement.ModuleName) with MaximumVersion $($Requirement.MaximumVersion) is already installed, skipping."
+                    } else {
+                        Write-Host "Installing $($Requirement.ModuleName) with MaximumVersion $($Requirement.MaximumVersion)..."
+                        Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion
+                        $ImportString += "Import-Module -Name $($Requirement.ModuleName) -MaximumVersion $($Requirement.MaximumVersion); "
+                        $UninstallString += "Uninstall-Module -Name $($Requirement.ModuleName) -MaximumVersion $($Requirement.MaximumVersion); "
+                    }
+                }
             }
         }
     }
@@ -77,3 +105,9 @@ if ($ResolvedPath -like "*.psd1") {
 
 Write-Host "Path resolved to: $ResolvedPath"
 "RESOLVED_PATH=$ResolvedPath" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+Write-Host "ImportString is '$ImportString'"
+"IMPORT_STRING=$ImportString" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
+
+Write-Host "UninstallString is '$UninstallString'"
+"UNINSTALL_STRING=$UninstallString" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
