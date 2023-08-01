@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - NuGet repo now unregistered after publishing, thanks to @Galvill (#11)
+- Bad examples in README.md
 
 ## [1.0.3] - 2022-11-04
 ### Fixed

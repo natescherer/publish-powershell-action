@@ -14,7 +14,7 @@ It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 ```yaml
     steps:
       - name: Publish PowerShell Module
-        uses: natescherer/update-powershell-metadata-action@v1
+        uses: natescherer/publish-powershell-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: packages
@@ -24,7 +24,7 @@ It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 ```yaml
     steps:
       - name: Publish PowerShell Module
-        uses: natescherer/update-powershell-metadata-action@v1
+        uses: natescherer/publish-powershell-action@v1
         with:
           token: ${{ secrets.NUGET_TOKEN }}
           target: nuget
@@ -34,7 +34,7 @@ It is tested and runs on `windows-latest`, `ubuntu-latest`, and `macos-latest`.
 ```yaml
     steps:
       - name: Publish PowerShell Module
-        uses: natescherer/update-powershell-metadata-action@v1
+        uses: natescherer/publish-powershell-action@v1
         with:
           token: ${{ secrets.GALLERY_API_KEY }}
           target: gallery
