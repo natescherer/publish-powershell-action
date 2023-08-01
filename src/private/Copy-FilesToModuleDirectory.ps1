@@ -6,22 +6,23 @@ function Copy-FilesToModuleDirectory {
     )
     # PowerShellGet currently requires the module be in a folder named the same as the manifest
 
-    $OutputPath = ""
+    $NewBasePath = ""
 
     Write-Host "Creating directory for module publishing..."
 
     $ManifestName = Split-Path -Path $Path -LeafBase
     $ManifestDir = Split-Path -Path $Path -Parent
 
-    $OutputPath = Join-Path $env:RUNNER_TEMP $ManifestName
+    $NewBasePath = Join-Path $env:RUNNER_TEMP $ManifestName
 
-    If (Test-Path $OutputPath) {
-        Remove-Item -LiteralPath $OutputPath -Force -Recurse
+    If (Test-Path $NewBasePath) {
+        Remove-Item -LiteralPath $NewBasePath -Force -Recurse
     }
 
-    Write-Host "Copying files from $ManifestDir to $OutputPath..."
-    New-Item -Path $OutputPath -Type Directory | Out-Null
-    Copy-Item -Path "$ManifestDir\*" -Destination $OutputPath -Recurse
+    Write-Host "Copying files from $ManifestDir to $NewBasePath..."
+    New-Item -Path $NewBasePath -Type Directory | Out-Null
+    Copy-Item -Path "$ManifestDir\*" -Destination $NewBasePath -Recurse
 
+    $OutputPath = $NewBasePath + $(Split-Path -Path $Path -Leaf)
     $OutputPath
 }
