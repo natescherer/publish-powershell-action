@@ -54,6 +54,7 @@ if ($ResolvedPath -like "*.psd1") {
     $ManifestData = Import-PowerShellDataFile $ResolvedPath
     foreach ($Requirement in $ManifestData.RequiredModules) {
         Write-Host "Now installing RequiredModules to local environment, as currently required by Publish-PSResource..."
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         if ($Requirement.GetType().Name -eq "String") {
             Install-Module -Name $Requirement
         } else {
