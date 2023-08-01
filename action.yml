@@ -46,7 +46,7 @@ runs:
         if ($env:INPUT_TARGET -eq "packages") {
           . "$env:GITHUB_ACTION_PATH\src\steps\3_publish_to_packages.ps1"
         } else {
-          Write-Host "Skipping as this target was not selected..."
+          Write-Host "Skipping as GitHubPackages target was not selected."
         }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
@@ -59,7 +59,7 @@ runs:
         if ($env:INPUT_TARGET -eq "nuget") {
           . "$env:GITHUB_ACTION_PATH\src\steps\4_publish_to_nuget.ps1"
         } else {
-          Write-Host "Skipping as this target was not selected..."
+          Write-Host "Skipping as NuGet target was not selected."
         }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
@@ -72,7 +72,20 @@ runs:
         if ($env:INPUT_TARGET -eq "gallery") {
           . "$env:GITHUB_ACTION_PATH\src\steps\5_publish_to_gallery.ps1"
         } else {
-          Write-Host "Skipping as this target was not selected..."
+          Write-Host "Skipping as Gallery target was not selected."
+        }
+      env:
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_TARGET: ${{ inputs.target }}
+        INPUT_PATH: ${{ inputs.path }}
+        INPUT_NUGETURL: ${{ inputs.nugetUrl }}
+      shell: pwsh
+    - name: Cleanup
+      run: |
+        if ($env:UNINSTALL_STRING) {
+          . "$env:GITHUB_ACTION_PATH\src\steps\6_cleanup.ps1"
+        } else {
+          Write-Host "Skipping as there is nothing to clean up."
         }
       env:
         INPUT_TOKEN: ${{ inputs.token }}
