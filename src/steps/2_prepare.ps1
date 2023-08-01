@@ -99,7 +99,6 @@ if ($ResolvedPath -like "*.psd1") {
             }
         }
     }
-    Write-Host $(ConvertTo-Json $DependencyInstallResults -Depth 100)
 }
 
 
