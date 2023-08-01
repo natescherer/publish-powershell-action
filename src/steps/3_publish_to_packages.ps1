@@ -1,16 +1,10 @@
-Write-Host "Registering local NuGet repository..."
-$LocalRepoPath = Join-Path $env:GITHUB_ACTION_PATH "repo"
-New-Item -Path $LocalRepoPath -Type Directory | Out-Null
-Register-PSResourceRepository -Name "LocalRepo" -Uri $LocalRepoPath
+Write-Host "Registering GitHub Packages repository..."
+Register-PSResourceRepository -Name "GitHubPackages" -Uri "https://nuget.pkg.github.com/$env:GITHUB_REPOSITORY/index.json"
 
-Write-Host "Publishing to local NuGet repository..."
-Publish-PSResource -Path $env:RESOLVED_PATH -Repository "LocalRepo"
+Write-Host "Publishing to Packages..."
+Publish-PSResource -Path $env:RESOLVED_PATH -Repository "GithubPackages" -ApiKey $env:INPUT_TOKEN
 
-Write-Host "Install gpr tool..."
-dotnet tool install --global gpr
-
-Write-Host "Publishing to GitHub Packages..."
-$NupkgPath = Get-ChildItem -Path $LocalRepoPath -Include "*.nupkg" -Recurse
-gpr push -k $env:INPUT_TOKEN $NupkgPath -r "https://github.com/$env:GITHUB_REPOSITORY"
+Write-Host "Unregistering GitHub Packages repository..."
+Unregister-PSResourceRepository -Name "GitHubPackages"
 
 Write-Host "Done!"
