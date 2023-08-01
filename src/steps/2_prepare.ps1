@@ -47,8 +47,12 @@ if (Test-Path -Path $FullPath -PathType Container) {
 }
 
 if ($ResolvedPath -like "*.psd1") {
+    # This is necessary due to weird folder naming requirements for module publishing
     . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
     $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
+
+    $DependencyInstallResults = Install-PSResource -RequiredResourceFile $ResolvedPath -PassThru
+    Write-Host $(ConvertTo-Json $DependencyInstallResults -Depth 100)
 }
 
 
