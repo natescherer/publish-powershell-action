@@ -51,7 +51,21 @@ if ($ResolvedPath -like "*.psd1") {
     . "$env:GITHUB_ACTION_PATH\src\private\Copy-FilesToModuleDirectory.ps1"
     $ResolvedPath = Copy-FilesToModuleDirectory -Path $ResolvedPath
 
-    $DependencyInstallResults = Install-PSResource -RequiredResourceFile $ResolvedPath -PassThru
+    $ManifestData = Import-PowerShellDataFile $ResolvedPath
+    foreach ($Requirement in $ManifestData.RequiredModules) {
+        Write-Host "Now installing RequiredModules to local environment, as currently required by Publish-PSResource..."
+        if ($Requirement.GetType().Name -eq "String") {
+            Install-Module -Name $Requirement
+        } else {
+            if ($Requirement.RequiredVersion) {
+                Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion
+            } elseif ($Requirement.ModuleVersion) {
+                Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion
+            } elseif ($Requirement.MaximumVersion) {
+                Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion
+            }
+        }
+    }
     Write-Host $(ConvertTo-Json $DependencyInstallResults -Depth 100)
 }
 
