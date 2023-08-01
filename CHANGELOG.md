@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- GitHub Packages publishing converted to using pure PSResourceGet
 - Action pinned to PSResourceGet 0.5.23-beta23
 
 ### Fixed
