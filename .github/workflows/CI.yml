@@ -7,19 +7,7 @@ on:
       - .github/**
   workflow_dispatch:
 jobs:
-  GetBuildNumber:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: pwsh
-    outputs:
-      build_number: ${{ steps.getbuildnumber.outputs.BUILD_NUMBER }}
-    steps:
-      - id: getbuildnumber
-        run: |
-          "BUILD_NUMBER=$(Get-Date -UFormat %s -Millisecond 0)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf-8 -Append
   Test:
-    needs: GetBuildNumber
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -31,6 +19,7 @@ jobs:
     steps:
       - name: Set Variables
         run: |
+          "BUILD_NUMBER=$(Get-Date -UFormat %s -Millisecond 0)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf-8 -Append
           "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
           "RUNNER_OS_LOWER=$($env:RUNNER_OS.ToLower())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Checkout
@@ -38,8 +27,8 @@ jobs:
       - name: Update Metadata
         uses: natescherer/update-powershell-metadata-action@v2
         with:
-          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER}}/TestModule-${{ env.RUNNER_OS_LOWER}}.psd1
-          version: 1.0.1-alpha${{ needs.GetBuildNumber.outputs.build_number }}
+          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}/TestModule-${{ env.RUNNER_OS_LOWER }}.psd1
+          version: 1.0.1-alpha${{ env.BUILD_NUMBER }}
       - name: Publish to Packages
         id: packages
         uses: ./
@@ -67,4 +56,4 @@ jobs:
           gist_token: ${{ secrets.PESTER_GIST_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BUILD_NUMBER: ${{ needs.GetBuildNumber.outputs.build_number }}
+          BUILD_NUMBER: ${{ env.BUILD_NUMBER }}
