@@ -1,5 +1,5 @@
 Write-Host "Registering GitHub Packages repository..."
-Register-PSResourceRepository -Name "GitHubPackages" -Uri "https://nuget.pkg.github.com/$env:GITHUB_REPOSITORY/index.json"
+Register-PSResourceRepository -Name "GitHubPackages" -Uri "https://nuget.pkg.github.com/$env:GITHUB_REPOSITORY_OWNER/index.json"
 
 Write-Host "Publishing to Packages..."
 Publish-PSResource -Path $env:RESOLVED_PATH -Repository "GithubPackages" -ApiKey $env:INPUT_TOKEN
