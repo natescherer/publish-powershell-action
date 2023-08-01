@@ -56,13 +56,17 @@ if ($ResolvedPath -like "*.psd1") {
         Write-Host "Now installing RequiredModules to local environment, as currently required by Publish-PSResource..."
         Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         if ($Requirement.GetType().Name -eq "String") {
+            Write-Host "Installing $Requirement..."
             Install-Module -Name $Requirement
         } else {
             if ($Requirement.RequiredVersion) {
+                Write-Host "Installing $($Requirement.ModuleName) with RequiredVersion $($Requirement.RequiredVersion)..."
                 Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion
             } elseif ($Requirement.ModuleVersion) {
+                Write-Host "Installing $($Requirement.ModuleName) with MinimumVersion $($Requirement.ModuleVersion)..."
                 Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion
             } elseif ($Requirement.MaximumVersion) {
+                Write-Host "Installing $($Requirement.ModuleName) with MaximumVersion $($Requirement.MaximumVersion)..."
                 Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion
             }
         }
