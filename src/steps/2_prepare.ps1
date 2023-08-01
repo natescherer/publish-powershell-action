@@ -57,17 +57,17 @@ if ($ResolvedPath -like "*.psd1") {
         Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
         if ($Requirement.GetType().Name -eq "String") {
             Write-Host "Installing $Requirement..."
-            Install-Module -Name $Requirement
+            Install-Module -Name $Requirement -PassThru
         } else {
             if ($Requirement.RequiredVersion) {
                 Write-Host "Installing $($Requirement.ModuleName) with RequiredVersion $($Requirement.RequiredVersion)..."
-                Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion
+                Install-Module -Name $Requirement.ModuleName -RequiredVersion $Requirement.RequiredVersion -PassThru
             } elseif ($Requirement.ModuleVersion) {
                 Write-Host "Installing $($Requirement.ModuleName) with MinimumVersion $($Requirement.ModuleVersion)..."
-                Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion
+                Install-Module -Name $Requirement.ModuleName -MinimumVersion $Requirement.ModuleVersion -PassThru
             } elseif ($Requirement.MaximumVersion) {
                 Write-Host "Installing $($Requirement.ModuleName) with MaximumVersion $($Requirement.MaximumVersion)..."
-                Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion
+                Install-Module -Name $Requirement.ModuleName -MaximumVersion $Requirement.MaximumVersion -PassThru
             }
         }
     }
