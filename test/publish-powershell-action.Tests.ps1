@@ -12,6 +12,7 @@ Describe 'Packages' {
         Install-PSResource -Name $ModuleName -Repository $RepoName -Prerelease -Credential $Credential
         Get-PSResource -Name $ModuleName | Should -Not -BeNullOrEmpty
         Uninstall-PSResource -Name $ModuleName -Version $Version -Prerelease
+        Unregister-PSResourceRepository -Name $RepoName
     }
 }
 
@@ -24,5 +25,6 @@ Describe 'NuGet' {
         Install-PSResource -Name $ModuleName -Repository $RepoName -Version $Version -Prerelease
         Get-PSResource -Name $ModuleName | Should -Not -BeNullOrEmpty
         Uninstall-PSResource -Name $ModuleName -Version $Version -Prerelease
+        Unregister-PSResourceRepository -Name $RepoName
     }
 }
