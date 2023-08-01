@@ -38,26 +38,26 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: packages
-          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}
+          path: tests/library/TestModule-${{ env.RUNNER_OS_LOWER }}
       - name: Publish to Packages (Dependencies)
         uses: ./
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           target: packages
-          path: test/library/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}
+          path: tests/library/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}
       - name: Publish to NuGet
         uses: ./
         with:
           token: ${{ secrets.CLOUDSMITH_KEY }}
           target: nuget
-          path: test/library/TestModule-${{ env.RUNNER_OS_LOWER }}
+          path: tests/library/TestModule-${{ env.RUNNER_OS_LOWER }}
           nugetUrl: https://nuget.cloudsmith.io/natescherer/publish-powershell-action/v3/index.json
       - name: Publish to NuGet (Dependencies)
         uses: ./
         with:
           token: ${{ secrets.CLOUDSMITH_KEY }}
           target: nuget
-          path: test/library/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}
+          path: tests/library/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}
           nugetUrl: https://nuget.cloudsmith.io/natescherer/publish-powershell-action/v3/index.json
       - name: Run Pester Tests
         id: pester
