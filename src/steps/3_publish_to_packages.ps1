@@ -14,7 +14,7 @@ $PublishSplat = @{
     SkipDependenciesCheck = $true
 }
 if ($env:RESOLVED_PATH -like "*.psd1") {
-    $ManifestData = Import-PowerShellDataFile $ResolvedPath
+    $ManifestData = Import-PowerShellDataFile $env:RESOLVED_PATH
     if ($ManifestData.RequiredModules) {
         $PublishSplat += @{
             SkipModuleManifestValidate = $true
