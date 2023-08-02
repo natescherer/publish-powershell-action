@@ -33,6 +33,11 @@ jobs:
         with:
           path: tests/library/TestModule-${{ env.RUNNER_OS_LOWER }}/TestModule-${{ env.RUNNER_OS_LOWER }}.psd1
           version: 1.0.1-alpha${{ env.BUILD_NUMBER }}
+      - name: Update Metadata Dependencies
+        uses: natescherer/update-powershell-metadata-action@v2
+        with:
+          path: tests/library/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}/TestModule-dependencies-${{ env.RUNNER_OS_LOWER }}.psd1
+          version: 1.0.1-alpha${{ env.BUILD_NUMBER }}
       - name: Publish to Packages
         uses: ./
         with:
