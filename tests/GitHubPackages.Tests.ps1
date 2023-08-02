@@ -1,3 +1,5 @@
+Start-Sleep -Seconds 10
+
 Describe 'GitHubPackages' {
     It 'Install Module' {
         $ModuleName = "TestModule-$env:RUNNER_OS_LOWER"
