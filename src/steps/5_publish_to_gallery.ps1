@@ -4,6 +4,19 @@ if ($env:IMPORT_STRING) {
 }
 
 Write-Host "Publishing to PowerShell Gallery..."
-Publish-PSResource -Path $env:RESOLVED_PATH -Repository "PSGallery" -ApiKey $env:INPUT_TOKEN
+$PublishSplat = @{
+    Path = $env:RESOLVED_PATH
+    Repository = "NuGet"
+    ApiKey = $env:INPUT_TOKEN
+}
+if ($env:RESOLVED_PATH -like "*.psd1") {
+    $ManifestData = Import-PowerShellDataFile $ResolvedPath
+    if ($ManifestData.RequiredModules) {
+        $PublishSplat += @{
+            SkipModuleManifestValidate = $true
+        }
+    }
+}
+Publish-PSResource @PublishSplat
 
 Write-Host "Done!"
