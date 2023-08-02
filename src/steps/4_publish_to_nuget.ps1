@@ -7,7 +7,21 @@ Write-Host "Registering NuGet repository..."
 Register-PSResourceRepository -Name "NuGet" -Uri $env:INPUT_NUGETURL -Trusted
 
 Write-Host "Publishing to NuGet repository...."
-Publish-PSResource -Path $env:RESOLVED_PATH -Repository "NuGet" -ApiKey $env:INPUT_TOKEN
+$PublishSplat = @{
+    Path = $env:RESOLVED_PATH
+    Repository = "NuGet"
+    ApiKey = $env:INPUT_TOKEN
+    SkipDependenciesCheck = $true
+}
+if ($env:RESOLVED_PATH -like "*.psd1") {
+    $ManifestData = Import-PowerShellDataFile $ResolvedPath
+    if ($ManifestData.RequiredModules) {
+        $PublishSplat += @{
+            SkipModuleManifestValidate = $true
+        }
+    }
+}
+Publish-PSResource @PublishSplat
 
 Unregister-PSResourceRepository -Name "NuGet"
 
