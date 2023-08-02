@@ -6,7 +6,7 @@ if ($env:IMPORT_STRING) {
 Write-Host "Publishing to PowerShell Gallery..."
 $PublishSplat = @{
     Path = $env:RESOLVED_PATH
-    Repository = "NuGet"
+    Repository = "PSGallery"
     ApiKey = $env:INPUT_TOKEN
 }
 if ($env:RESOLVED_PATH -like "*.psd1") {
