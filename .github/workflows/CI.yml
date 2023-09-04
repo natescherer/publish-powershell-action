@@ -27,7 +27,7 @@ jobs:
           "BARE_REPOSITORY=$($env:GITHUB_REPOSITORY.split("/")[1])" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
           "RUNNER_OS_LOWER=$($env:RUNNER_OS.ToLower())" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf-8 -Append
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Update Metadata
         uses: natescherer/update-powershell-metadata-action@v2
         with:
