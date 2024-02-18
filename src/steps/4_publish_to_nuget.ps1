@@ -3,13 +3,14 @@ if ($env:IMPORT_STRING) {
     Invoke-Expression -Command $env:IMPORT_STRING
 }
 
+$PSRepositoryName = "Nuget-$(New-GUID)"
 Write-Host "Registering NuGet repository..."
-Register-PSResourceRepository -Name "NuGet" -Uri $env:INPUT_NUGETURL -Trusted
+Register-PSResourceRepository -Name $PSRepositoryName -Uri $env:INPUT_NUGETURL -Trusted
 
 Write-Host "Publishing to NuGet repository...."
 $PublishSplat = @{
     Path = $env:RESOLVED_PATH
-    Repository = "NuGet"
+    Repository = $PSRepositoryName
     ApiKey = $env:INPUT_TOKEN
     SkipDependenciesCheck = $true
 }
@@ -23,6 +24,6 @@ if ($env:RESOLVED_PATH -like "*.psd1") {
 }
 Publish-PSResource @PublishSplat
 
-Unregister-PSResourceRepository -Name "NuGet"
+Unregister-PSResourceRepository -Name $PSRepositoryName
 
 Write-Host "Done!"
